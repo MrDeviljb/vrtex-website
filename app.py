@@ -13,7 +13,7 @@ ALUU_API_URL = "https://aluu.in/api/check/bgmi"
 KNOWN_PLAYERS = {
     "5298394296": "FinishōMtēKr",
     "55622232685": "『KAGEYAMMA』",
-    "55697305051": "Player_5051",
+    "55697305051": "M͜͡r๛N͜͡K",
     "5123456789": "DEVxSNIPER",
     "5182930481": "JonathanGaming",
     "5219482019": "MortalYT",
