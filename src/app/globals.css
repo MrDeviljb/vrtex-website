@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #080a0f;
+  --surface: #0f141f;
+  --surface-light: #171f30;
+  --border: #1e293b;
+  --neon-green: #00ff88;
+  --neon-emerald: #10b981;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #080a0f;
+  color: #f8fafc;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: 'Rajdhani', sans-serif;
+  letter-spacing: 0.03em;
+}
+
+.font-gaming {
+  font-family: 'Chakra Petch', sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080a0f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
+}
+
+/* Glass & Glow utilities */
+.glass-panel {
+  background: rgba(15, 20, 31, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-glow {
+  background: rgba(15, 20, 31, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  box-shadow: 0 0 25px rgba(0, 255, 136, 0.08);
+}
+
+.gaming-gradient {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(8, 10, 15, 0.95) 100%);
+}
+
+.neon-text-glow {
+  text-shadow: 0 0 12px rgba(0, 255, 136, 0.4);
+}
+
+.badge-live {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+.badge-open {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.badge-upcoming {
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  color: #60a5fa;
+}
+
+.badge-completed {
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: #94a3b8;
+}
+
+.badge-scrim {
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  color: #c084fc;
+}
