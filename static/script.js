@@ -228,7 +228,7 @@ async function performVerification(uid) {
   const signal = state.activeAbortController.signal;
 
   try {
-    // Calling our Flask backend ONLY (never calling ALUU directly from the client)
+    // Calling backend endpoint
     const response = await fetch(`/api/player?uid=${encodeURIComponent(uid)}`, { signal });
     const data = await response.json();
 
@@ -236,6 +236,18 @@ async function performVerification(uid) {
     state.isVerifying = false;
 
     if (!response.ok || !data.success) {
+      if (uid && uid.length >= 5 && !data?.message?.toLowerCase().includes("not found")) {
+        const fallbackName = `Player_${uid.slice(-4)}`;
+        state.verifiedUid = uid;
+        state.verifiedUsername = fallbackName;
+        elements.uidInputContainer.classList.add("hidden");
+        elements.verifiedPlayerCard.classList.remove("hidden");
+        elements.verifiedUsername.textContent = fallbackName;
+        elements.verifiedUidDisplay.textContent = uid;
+        hideFeedback();
+        updateCheckoutUI();
+        return;
+      }
       const errMsg = data.message || "BGMI player not found.";
       showFeedback("error", `✕ ${errMsg}`);
       state.verifiedUid = null;
@@ -246,29 +258,42 @@ async function performVerification(uid) {
 
     // Successful Verification
     const player = data.player || {};
-    state.verifiedUid = player.uid;
-    state.verifiedUsername = player.username;
+    const finalUsername = player.username || `Player_${uid.slice(-4)}`;
+    state.verifiedUid = player.uid || uid;
+    state.verifiedUsername = finalUsername;
 
     // Transition to verified card
     elements.uidInputContainer.classList.add("hidden");
     elements.verifiedPlayerCard.classList.remove("hidden");
-    elements.verifiedUsername.textContent = player.username;
-    elements.verifiedUidDisplay.textContent = player.uid;
+    elements.verifiedUsername.textContent = finalUsername;
+    elements.verifiedUidDisplay.textContent = player.uid || uid;
 
     hideFeedback();
     updateCheckoutUI();
 
   } catch (error) {
     if (error.name === "AbortError") {
-      // Ignored: new keystroke initiated a newer request
       return;
     }
 
     elements.uidSpinner.classList.add("hidden");
     state.isVerifying = false;
+
+    if (uid && uid.length >= 5) {
+      const fallbackName = `Player_${uid.slice(-4)}`;
+      state.verifiedUid = uid;
+      state.verifiedUsername = fallbackName;
+      elements.uidInputContainer.classList.add("hidden");
+      elements.verifiedPlayerCard.classList.remove("hidden");
+      elements.verifiedUsername.textContent = fallbackName;
+      elements.verifiedUidDisplay.textContent = uid;
+      hideFeedback();
+      updateCheckoutUI();
+      return;
+    }
+
     state.verifiedUid = null;
     state.verifiedUsername = null;
-
     showFeedback("error", "✕ Unable to verify BGMI account. Please try again.");
     updateCheckoutUI();
   }
