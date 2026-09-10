@@ -114,9 +114,9 @@ export default function LoginPage() {
 
         {/* Demo Credentials Box */}
         <div className="mt-6 p-3 bg-surface-light rounded-xl border border-border/80 text-[11px] text-gray-400 space-y-1">
-          <p className="font-bold text-gray-300">Quick Demo Accounts:</p>
-          <p>Super Admin: <span className="text-neon-green font-mono">admin@vortexesports.com</span> / <span className="text-white font-mono">Admin@12345</span></p>
-          <p>Player (Captain): <span className="text-neon-green font-mono">player@vortexesports.com</span> / <span className="text-white font-mono">Player@12345</span></p>
+          <p className="font-bold text-gray-300">Admin Login Credentials:</p>
+          <p>Main Admin: <span className="text-neon-green font-mono">devil8900@admin.bgmi</span> / <span className="text-white font-mono">DevilxAdmin</span></p>
+          <p>Backup Admin: <span className="text-neon-green font-mono">admin@vortexesports.com</span> / <span className="text-white font-mono">Admin@12345</span></p>
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-6">
