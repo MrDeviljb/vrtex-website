@@ -22,6 +22,14 @@ export const metadata: Metadata = {
     title: "DevX eSports | BGMI Competitive Platform",
     description: "Compete in daily scrims and high-stakes BGMI tournaments.",
   },
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({

@@ -113,17 +113,8 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Right Section: Notifications, Admin Access Shield & User */}
+          {/* Right Section: Notifications & User */}
           <div className="hidden sm:flex items-center gap-3">
-            {/* ADMIN ACCESS Shield Button (Section 18) */}
-            <Link
-              href="/admin/login"
-              title="Admin Portal Access"
-              className="p-2 rounded-lg bg-surface hover:bg-amber-950/40 border border-amber-500/30 text-amber-400 hover:text-amber-300 transition flex items-center gap-1 text-xs font-mono"
-            >
-              <Shield className="w-4 h-4 text-amber-400" />
-              <span className="font-bold hidden xl:inline">ADMIN</span>
-            </Link>
             {/* Notification Bell */}
             {currentUser && (
               <div className="relative">
