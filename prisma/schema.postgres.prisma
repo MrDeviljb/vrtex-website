@@ -1,0 +1,281 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String         @id @default(cuid())
+  email              String         @unique
+  passwordHash       String
+  username           String         @unique
+  role               String         @default("PLAYER") // SUPER_ADMIN, TOURNAMENT_ADMIN, MODERATOR, PLAYER
+  permissions        String?        // JSON array of granted moderator permissions
+  mustChangePassword Boolean        @default(false)
+  isBanned           Boolean        @default(false)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  profile            Profile?
+  captainTeams       Team[]         @relation("CaptainTeams")
+  teamMemberships    TeamMember[]
+  payments           Payment[]
+  notifications      Notification[]
+  supportTickets     SupportTicket[]
+  ticketReplies      TicketReply[]
+  auditLogs          AuditLog[]
+}
+
+model Profile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bgmiUid      String?  @unique
+  bgmiUsername String?
+  isVerified   Boolean  @default(false)
+  avatarUrl    String?
+  bio          String?
+  wins         Int      @default(0)
+  kills        Int      @default(0)
+  points       Int      @default(0)
+  updatedAt    DateTime @updatedAt
+}
+
+model Team {
+  id            String                   @id @default(cuid())
+  name          String                   @unique
+  tag           String
+  logoUrl       String?
+  captainId     String
+  captain       User                     @relation("CaptainTeams", fields: [captainId], references: [id])
+  inviteCode    String                   @unique
+  createdAt     DateTime                 @default(now())
+
+  members       TeamMember[]
+  registrations TournamentRegistration[]
+  results       Result[]
+  payments      Payment[]
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      String   @default("PLAYER") // CAPTAIN, PLAYER, SUBSTITUTE
+  joinedAt  DateTime @default(now())
+
+  @@unique([teamId, userId])
+}
+
+model Tournament {
+  id               String                   @id @default(cuid())
+  title            String
+  slug             String                   @unique
+  bannerUrl        String?
+  description      String
+  gameMode         String                   @default("Squad") // Solo, Duo, Squad
+  perspective      String                   @default("TPP") // TPP, FPP
+  type             String                   @default("FREE") // FREE, PAID
+  maxTeams         Int                      @default(25)
+  maxRosterMain    Int                      @default(4)  // max main players per team (including captain)
+  maxRosterSub     Int                      @default(1)  // max substitutes per team
+  entryFee         Int                      @default(0) // in INR (0 = FREE)
+  prizePool        Int                      @default(0) // in INR
+  regStart         DateTime
+  regEnd           DateTime
+  startDate        DateTime
+  sessionHeader    String                   @default("DAILY SCRIMS")
+  status           String                   @default("UPCOMING") // UPCOMING, REGISTRATION_OPEN, REGISTRATION_CLOSED, ROOM_RELEASED, LIVE, COMPLETED, CANCELLED
+  isScrim          Boolean                  @default(false)
+  scoringRulesJson String                   @default("{\"placement\":{\"1\":10,\"2\":6,\"3\":5,\"4\":4,\"5\":3,\"6\":2,\"7\":1,\"8\":1,\"9\":0,\"10\":0},\"kill\":1}")
+  rulesText        String                   @default("Standard BGMI Tournament Rules apply. No cheating, emulators or teaming allowed.")
+  createdAt        DateTime                 @default(now())
+
+  matches          Match[]
+  registrations    TournamentRegistration[]
+  prizes           Prize[]
+  payments         Payment[]
+  slotHistories    SlotHistory[]
+}
+
+model TournamentRegistration {
+  id               String     @id @default(cuid())
+  tournamentId     String
+  tournament       Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  teamId           String
+  team             Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  slotNumber       Int?
+  status           String     @default("PENDING") // PENDING, UNDER_REVIEW, APPROVED, REJECTED, WAITLIST, CANCELLED, DISQUALIFIED
+  waitlistPosition Int?       // position in waitlist queue (null if not on waitlist)
+  cancelledAt      DateTime?  // when the registration was cancelled
+  cancelReason     String?    // reason for cancellation
+  paymentId        String?    @unique
+  payment          Payment?   @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  registeredAt     DateTime   @default(now())
+
+  slotHistories    SlotHistory[]
+
+  @@unique([tournamentId, teamId])
+}
+
+model Match {
+  id           String     @id @default(cuid())
+  tournamentId String
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  matchNumber  Int
+  map          String     @default("Erangel")
+  mode         String     @default("Squad")
+  startTime    DateTime
+  status       String     @default("SCHEDULED") // SCHEDULED, ROOM_PENDING, ROOM_RELEASED, LIVE, RESULTS_PENDING, COMPLETED, CANCELLED
+
+  room         Room?
+  results      Result[]
+}
+
+model Room {
+  id               String   @id @default(cuid())
+  matchId          String   @unique
+  match            Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  roomId           String
+  roomPassword     String
+  releaseTime      DateTime
+  isReleased       Boolean  @default(false)
+  isManuallyHidden Boolean  @default(false)
+  updatedAt        DateTime @updatedAt
+}
+
+model Result {
+  id              String   @id @default(cuid())
+  matchId         String
+  match           Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  teamId          String
+  team            Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  placement       Int
+  kills           Int
+  placementPoints Int
+  killPoints      Int
+  totalPoints     Int
+  createdAt       DateTime @default(now())
+
+  @@unique([matchId, teamId])
+}
+
+model Prize {
+  id            String     @id @default(cuid())
+  tournamentId  String
+  tournament    Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  rank          Int
+  amount        Int
+  status        String     @default("PENDING") // PENDING, PROCESSING, PAID, FAILED
+  transactionId String?
+  paidAt        DateTime?
+  notes         String?
+}
+
+model Payment {
+  id              String                  @id @default(cuid())
+  userId          String
+  user            User                    @relation(fields: [userId], references: [id])
+  tournamentId    String
+  tournament      Tournament              @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  teamId          String
+  team            Team                    @relation(fields: [teamId], references: [id])
+  amount          Int
+  upiId           String                  @default("dev-millionaire@fam")
+  utrNumber       String?                 @unique
+  screenshot      String?
+  status          String                  @default("PENDING") // PENDING, UNDER_REVIEW, APPROVED, REJECTED, REFUNDED, REFUND_PENDING, REFUND_REJECTED
+  submittedAt     DateTime                @default(now())
+  reviewedBy      String?
+  reviewedAt      DateTime?
+  rejectionReason String?
+  createdAt       DateTime                @default(now())
+
+  registration    TournamentRegistration?
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      String   @default("INFO") // INFO, SUCCESS, WARNING, ROOM, PRIZE
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model SupportTicket {
+  id        String        @id @default(cuid())
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject   String
+  category  String        // Payment, Registration, Room, Result, Other
+  message   String
+  status    String        @default("OPEN") // OPEN, IN_PROGRESS, RESOLVED, CLOSED
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  replies   TicketReply[]
+}
+
+model TicketReply {
+  id        String        @id @default(cuid())
+  ticketId  String
+  ticket    SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User          @relation(fields: [senderId], references: [id])
+  message   String
+  isAdmin   Boolean       @default(false)
+  createdAt DateTime      @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  adminId   String
+  admin     User     @relation(fields: [adminId], references: [id])
+  action    String
+  target    String
+  details   String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+}
+
+// Tracks every slot assignment change (cancellations, auto-assigns, manual overrides)
+model SlotHistory {
+  id               String                  @id @default(cuid())
+  tournamentId     String
+  tournament       Tournament              @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  slotNumber       Int
+  registrationId   String?
+  registration     TournamentRegistration? @relation(fields: [registrationId], references: [id], onDelete: SetNull)
+  previousTeamId   String?                 // null if slot was AVAILABLE before
+  previousTeamName String?                 // denormalized for history display
+  newTeamId        String?                 // null if slot became AVAILABLE
+  newTeamName      String?                 // denormalized for history display
+  action           String                  // ASSIGNED, CANCELLED, REASSIGNED, MOVED_TO_WAITLIST, ADMIN_OVERRIDE
+  changedById      String?                 // null = system, otherwise user id
+  changedByName    String?                 // denormalized
+  reason           String?
+  createdAt        DateTime                @default(now())
+}
+
+// Tracks every roster change (add/remove player)
+model RosterChangeLog {
+  id               String   @id @default(cuid())
+  teamId           String
+  tournamentId     String?  // optional: which tournament context
+  actorId          String   // who performed the action (captain)
+  actorUsername    String   // denormalized
+  action           String   // ADD_PLAYER, REMOVE_PLAYER, ADD_SUBSTITUTE, REMOVE_SUBSTITUTE
+  targetBgmiUid    String
+  targetBgmiUsername String
+  role             String   // PLAYER, SUBSTITUTE
+  reason           String?
+  createdAt        DateTime @default(now())
+}
