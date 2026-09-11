@@ -383,7 +383,7 @@ export default async function HomePage() {
                 BUILT FOR SERIOUS BGMI ESPORTS
               </h2>
               <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-                DevX eSports eliminates fake accounts, unfair emulator lobbies, delayed room distributions, and prize disputes with our real-time tournament infrastructure.
+                Vrtex Esports eliminates fake accounts, unfair emulator lobbies, delayed room distributions, and prize disputes with our real-time tournament infrastructure.
               </p>
 
               <div className="space-y-3 pt-2">

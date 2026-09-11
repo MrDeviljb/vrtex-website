@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           {
             success: false,
-            message: "This BGMI UID is already linked to another DevX eSports account.",
+            message: "This BGMI UID is already linked to another Vrtex Esports account.",
           },
           { status: 400 }
         );

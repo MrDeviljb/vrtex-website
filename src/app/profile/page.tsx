@@ -161,7 +161,7 @@ export default function ProfilePage() {
                 Tournament Statistics
               </h3>
               <p className="text-xs text-gray-400">
-                Official career statistics accumulated across sanctioned Vortex Esports tournaments.
+                Official career statistics accumulated across sanctioned Vrtex Esports tournaments.
               </p>
             </div>
 

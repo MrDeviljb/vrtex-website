@@ -306,7 +306,7 @@ export default function SupportPage() {
                       >
                         <div className="flex items-center justify-between gap-2 mb-1">
                           <span className="font-bold text-neon-green text-[11px]">
-                            {r.isAdmin ? "🛡️ Official DevX eSports Referee" : r.sender?.username || "You"}
+                            {r.isAdmin ? "🛡️ Official Vrtex Esports Referee" : r.sender?.username || "You"}
                           </span>
                           <span className="text-[9px] text-gray-400 font-mono">
                             {new Date(r.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}

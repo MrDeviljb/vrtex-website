@@ -7,7 +7,7 @@ export default function RulesPage() {
       title: "1. Anti-Cheat & Device Integrity",
       icon: Shield,
       rules: [
-        "Use of any unauthorized third-party apps, plugins, modded APKs, script injectors, recoil macros, or memory modifiers will result in an immediate permanent ban across the entire DevX eSports network.",
+        "Use of any unauthorized third-party apps, plugins, modded APKs, script injectors, recoil macros, or memory modifiers will result in an immediate permanent ban across the entire Vrtex Esports network.",
         "Emulators (Bluestacks, LDPlayer, GameLoop, Gameloop, etc.) are strictly prohibited unless a tournament is explicitly marked as 'EMULATOR OPEN'.",
         "Hardware triggers, physical capacitive attachments, and rooted/jailbroken devices with bypassed integrity checks are barred from prize-bearing tournaments.",
       ],
@@ -68,7 +68,7 @@ export default function RulesPage() {
           COMPETITIVE RULEBOOK
         </h1>
         <p className="text-gray-400 text-sm mt-2 leading-relaxed">
-          Standardized tournament regulations enforced by DevX eSports referees to guarantee 100% fair play, transparency, and integrity.
+          Standardized tournament regulations enforced by Vrtex Esports referees to guarantee 100% fair play, transparency, and integrity.
         </p>
       </div>
 

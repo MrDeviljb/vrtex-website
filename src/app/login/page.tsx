@@ -75,7 +75,7 @@ export default function LoginPage() {
                 required
                 value={emailOrUsername}
                 onChange={(e) => setEmailOrUsername(e.target.value)}
-                placeholder="player@vortexesports.com"
+                placeholder="player@vrtexesports.com"
                 className="w-full bg-surface-light border border-border focus:border-neon-green rounded-xl pl-10 pr-4 py-3 text-sm text-white outline-none transition"
               />
             </div>

@@ -5,21 +5,21 @@ import Footer from "@/components/Footer";
 import BottomNav from "@/components/BottomNav";
 
 export const metadata: Metadata = {
-  title: "DevX eSports | Elite BGMI Tournaments & Scrims Platform",
+  title: "Vrtex Esports | Elite BGMI Tournaments & Scrims Platform",
   description:
     "Compete in official BGMI tournaments and scrims. Build your squad, climb the verified leaderboard, and win real cash prize pools. Anti-cheat protected.",
-  keywords: ["BGMI", "Battlegrounds Mobile India", "BGMI Tournaments", "BGMI Scrims", "Esports", "DevX eSports"],
-  authors: [{ name: "DevX eSports Operations" }],
+  keywords: ["BGMI", "Battlegrounds Mobile India", "BGMI Tournaments", "BGMI Scrims", "Esports", "Vrtex Esports"],
+  authors: [{ name: "Vrtex Esports Operations" }],
   openGraph: {
-    title: "DevX eSports | Dominate the Battleground",
+    title: "Vrtex Esports | Dominate the Battleground",
     description: "Official BGMI esports platform for tournaments, scrims, and verified squad rankings.",
     type: "website",
-    url: "https://devxesports.com",
-    siteName: "DevX eSports",
+    url: "https://vrtexesports.com",
+    siteName: "Vrtex Esports",
   },
   twitter: {
     card: "summary_large_image",
-    title: "DevX eSports | BGMI Competitive Platform",
+    title: "Vrtex Esports | BGMI Competitive Platform",
     description: "Compete in daily scrims and high-stakes BGMI tournaments.",
   },
   icons: {

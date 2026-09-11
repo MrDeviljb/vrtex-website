@@ -89,7 +89,7 @@ export default function AdminLayout({
                 <Lock className="w-4 h-4" />
               </div>
               <span className="font-display font-black text-lg text-white">
-                DevX <span className="text-accent-gold text-xs font-mono">ADMIN</span>
+                Vrtex <span className="text-accent-gold text-xs font-mono">ADMIN</span>
               </span>
             </Link>
           </div>

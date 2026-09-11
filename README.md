@@ -1,6 +1,6 @@
-# VORTEX ESPORTS - Production BGMI Tournament Platform
+# VRTEX ESPORTS - Production BGMI Tournament Platform
 
-Vortex Esports is an original, production-ready BGMI (Battlegrounds Mobile India) competitive tournament and scrim platform featuring an authentic esports aesthetic, server-side ALUU BGMI UID verification, automated time-locked custom room credential distribution, configurable tournament scoring rules, roster management, and a dedicated secure administration dashboard with RBAC.
+Vrtex Esports is an original, production-ready BGMI (Battlegrounds Mobile India) competitive tournament and scrim platform featuring an authentic esports aesthetic, server-side ALUU BGMI UID verification, automated time-locked custom room credential distribution, configurable tournament scoring rules, roster management, and a dedicated secure administration dashboard with RBAC.
 
 ---
 

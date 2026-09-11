@@ -83,11 +83,11 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
             <div className="w-10 h-10 rounded-lg bg-surface border border-neon-green/40 flex items-center justify-center shadow-neon-green group-hover:border-neon-green transition-all duration-300">
-              <span className="font-display font-extrabold text-2xl text-neon-green tracking-wider">D</span>
+              <span className="font-display font-extrabold text-2xl text-neon-green tracking-wider">V</span>
             </div>
             <div className="flex flex-col">
               <span className="font-display text-xl font-bold tracking-wider text-white flex items-center gap-1.5">
-                DevX <span className="text-neon-green text-xs px-1.5 py-0.5 rounded bg-neon-green/10 border border-neon-green/30 uppercase tracking-widest font-mono">eSPORTS</span>
+                Vrtex <span className="text-neon-green text-xs px-1.5 py-0.5 rounded bg-neon-green/10 border border-neon-green/30 uppercase tracking-widest font-mono">ESPORTS</span>
               </span>
               <span className="text-[10px] text-gray-400 font-mono tracking-wider">BGMI COMPETITIVE HUB</span>
             </div>

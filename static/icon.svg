@@ -13,17 +13,14 @@
   <rect width="64" height="64" rx="14" fill="#080a0f"/>
   <rect x="2" y="2" width="60" height="60" rx="12" fill="none" stroke="url(#neonGrad)" stroke-width="2.5" stroke-opacity="0.8"/>
   
-  <!-- DevX D Logo with gaming glow -->
+  <!-- Vrtex V Logo with gaming glow -->
   <g filter="url(#glow)">
-    <!-- Vertical Spine -->
-    <path d="M20 16 H31 C40.5 16 46 22.5 46 32 C46 41.5 40.5 48 31 48 H20 Z" 
+    <path d="M18 18 L32 46 L46 18" 
           fill="none" 
           stroke="url(#neonGrad)" 
           stroke-width="5" 
           stroke-linecap="round" 
           stroke-linejoin="round" />
-    <!-- Inner Accent -->
-    <path d="M20 22 V42" stroke="url(#neonGrad)" stroke-width="3" stroke-linecap="round" />
-    <polygon points="31,27 36,32 31,37" fill="url(#neonGrad)" />
+    <polygon points="32,38 27,28 37,28" fill="url(#neonGrad)" />
   </g>
 </svg>

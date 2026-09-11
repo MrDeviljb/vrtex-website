@@ -11,10 +11,10 @@ export default function Footer() {
           <div className="md:col-span-1 space-y-4">
             <Link href="/" className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-lg bg-surface border border-neon-green/40 flex items-center justify-center">
-                <span className="font-display font-extrabold text-xl text-neon-green">D</span>
+                <span className="font-display font-extrabold text-xl text-neon-green">V</span>
               </div>
               <span className="font-display text-xl font-bold tracking-wider text-white">
-                DevX <span className="text-neon-green text-xs font-mono">eSPORTS</span>
+                Vrtex <span className="text-neon-green text-xs font-mono">ESPORTS</span>
               </span>
             </Link>
             <p className="text-xs text-gray-400 leading-relaxed">
@@ -75,7 +75,7 @@ export default function Footer() {
             This platform is an independent esports tournament service and is not affiliated with or endorsed by KRAFTON or BGMI.
           </p>
           <div className="flex items-center gap-6 whitespace-nowrap">
-            <span>© 2026 DevX eSports Platform. All Rights Reserved.</span>
+            <span>© 2026 Vrtex Esports Platform. All Rights Reserved.</span>
           </div>
         </div>
       </div>
