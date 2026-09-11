@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { name, tag, logoUrl } = await request.json();
+    const { name, tag, logoUrl, players } = await request.json();
     if (!name || !tag) {
       return NextResponse.json(
         { success: false, message: "Team name and team tag are required." },
@@ -96,6 +96,84 @@ export async function POST(request: NextRequest) {
           },
         },
       },
+    });
+
+    // If manual players were supplied during team creation, add them
+    if (Array.isArray(players) && players.length > 0) {
+      for (const p of players) {
+        if (!p || !p.bgmiUid) continue;
+        const pUid = String(p.bgmiUid).trim();
+        if (!pUid || pUid.length < 5) continue;
+        if (pUid === user.profile?.bgmiUid) continue; // Skip captain
+
+        const pName = (p.playerName && String(p.playerName).trim()) || `BGMI_${pUid.slice(-4)}`;
+        const pRole = p.role === "SUBSTITUTE" ? "SUBSTITUTE" : "PLAYER";
+
+        try {
+          let targetUser = await prisma.user.findFirst({
+            where: {
+              OR: [
+                { profile: { bgmiUid: pUid } },
+                { username: `player_${pUid}` },
+              ],
+            },
+            include: { profile: true },
+          });
+
+          if (!targetUser) {
+            targetUser = await prisma.user.create({
+              data: {
+                email: `player_${pUid}@bgmi.local`,
+                username: `player_${pUid}`,
+                passwordHash: "NOPASSWORD_MANAGED_BY_CAPTAIN",
+                role: "PLAYER",
+                profile: {
+                  create: {
+                    bgmiUid: pUid,
+                    bgmiUsername: pName,
+                    isVerified: true,
+                  },
+                },
+              },
+              include: { profile: true },
+            });
+          } else if (!targetUser.profile?.bgmiUid || !targetUser.profile?.isVerified) {
+            await prisma.profile.upsert({
+              where: { userId: targetUser.id },
+              update: { bgmiUid: pUid, bgmiUsername: pName, isVerified: true },
+              create: { userId: targetUser.id, bgmiUid: pUid, bgmiUsername: pName, isVerified: true },
+            });
+          }
+
+          // Add to team
+          await prisma.teamMember.create({
+            data: {
+              teamId: team.id,
+              userId: targetUser.id,
+              role: pRole,
+            },
+          });
+
+          // Change log
+          await prisma.rosterChangeLog.create({
+            data: {
+              teamId: team.id,
+              actorId: user.id,
+              actorUsername: user.username,
+              action: pRole === "SUBSTITUTE" ? "ADD_SUBSTITUTE" : "ADD_PLAYER",
+              targetBgmiUid: pUid,
+              targetBgmiUsername: pName,
+              role: pRole,
+            },
+          }).catch(() => {});
+        } catch (err) {
+          console.error("Error adding player during team creation:", err);
+        }
+      }
+    }
+
+    const fullTeam = await prisma.team.findUnique({
+      where: { id: team.id },
       include: {
         members: {
           include: {
@@ -109,8 +187,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: "Team created successfully!",
-      team,
+      message: "Team created successfully with all player details!",
+      team: fullTeam,
     });
   } catch (error) {
     console.error("Create team error:", error);

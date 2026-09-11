@@ -86,19 +86,20 @@ export async function POST(
       );
     }
 
-    // Verify BGMI UID via Aluu API
-    const verification = await verifyBgmiUidWithAluu(cleanUid);
-    if (!verification.success || !verification.player) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: verification.message || "Failed to verify BGMI UID with official game servers.",
-        },
-        { status: 400 }
-      );
-    }
+    // Use manual player name if provided, or verify BGMI UID via Aluu API
+    const rawPlayerName = body.playerName || body.bgmiUsername;
+    let bgmiUsername: string;
 
-    const bgmiUsername = verification.player.username;
+    if (rawPlayerName && String(rawPlayerName).trim().length > 0) {
+      bgmiUsername = String(rawPlayerName).trim();
+    } else {
+      const verification = await verifyBgmiUidWithAluu(cleanUid);
+      if (verification.success && verification.player) {
+        bgmiUsername = verification.player.username;
+      } else {
+        bgmiUsername = `BGMI_${cleanUid.slice(-4)}`;
+      }
+    }
 
     // Find or create a platform user account for this BGMI UID
     let targetUser = await prisma.user.findFirst({

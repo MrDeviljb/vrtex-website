@@ -168,6 +168,70 @@ export async function POST(
       return NextResponse.json({ success: true, message: "You have left the team." });
     }
 
+    // Action: UPDATE_MEMBER_DETAILS (Captain only)
+    if (action === "UPDATE_MEMBER_DETAILS") {
+      if (team.captainId !== user.id) {
+        return NextResponse.json(
+          { success: false, message: "Only the captain can update player details." },
+          { status: 403 }
+        );
+      }
+      const { targetUserId, playerName, bgmiUid, role: newRole } = await request.json().catch(() => ({}));
+      if (!targetUserId) {
+        return NextResponse.json({ success: false, message: "Target player is required." }, { status: 400 });
+      }
+
+      if (newRole && (newRole === "PLAYER" || newRole === "SUBSTITUTE")) {
+        await prisma.teamMember.update({
+          where: { teamId_userId: { teamId: team.id, userId: targetUserId } },
+          data: { role: newRole },
+        });
+      }
+
+      if (playerName || bgmiUid) {
+        const updateData: any = {};
+        if (playerName && playerName.trim()) updateData.bgmiUsername = playerName.trim();
+        if (bgmiUid && bgmiUid.trim()) {
+          updateData.bgmiUid = bgmiUid.trim();
+          updateData.isVerified = true;
+        }
+
+        await prisma.profile.upsert({
+          where: { userId: targetUserId },
+          update: updateData,
+          create: {
+            userId: targetUserId,
+            ...updateData,
+            isVerified: true,
+          },
+        });
+      }
+
+      return NextResponse.json({ success: true, message: "Player details updated successfully." });
+    }
+
+    // Action: UPDATE_TEAM_DETAILS (Captain only)
+    if (action === "UPDATE_TEAM_DETAILS") {
+      if (team.captainId !== user.id) {
+        return NextResponse.json(
+          { success: false, message: "Only the captain can update team details." },
+          { status: 403 }
+        );
+      }
+      const { name, tag, logoUrl } = await request.json().catch(() => ({}));
+      const updateData: any = {};
+      if (name && name.trim()) updateData.name = name.trim();
+      if (tag && tag.trim()) updateData.tag = tag.trim().toUpperCase();
+      if (logoUrl !== undefined) updateData.logoUrl = logoUrl;
+
+      const updated = await prisma.team.update({
+        where: { id: team.id },
+        data: updateData,
+      });
+
+      return NextResponse.json({ success: true, message: "Team details updated successfully.", team: updated });
+    }
+
     return NextResponse.json({ success: false, message: "Invalid action." }, { status: 400 });
   } catch (error) {
     console.error("Team action error:", error);
